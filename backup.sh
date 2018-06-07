@@ -14,18 +14,17 @@ start=`date +%s`
 rm -f ${lastLogfile}
 echo "Starting Backup at $(date +"%Y-%m-%d %H:%M:%S")"
 echo "Starting Backup at $(date)" >> ${lastLogfile}
-logLast "BACKUP_CRON: ${BACKUP_CRON}"
+logLast "CRON_SCHEDULE: ${CRON_SCHEDULE}"
 logLast "RESTIC_TAG: ${RESTIC_TAG}"
 logLast "RESTIC_FORGET_ARGS: ${RESTIC_FORGET_ARGS}"
 logLast "RESTIC_JOB_ARGS: ${RESTIC_JOB_ARGS}"
 
-
 # Do not save full backup log to logfile but to backup-last.log
-restic backup /data ${RESTIC_JOB_ARGS} --tag=${RESTIC_TAG?"Missing environment variable RESTIC_TAG"} >> ${lastLogfile} 2>&1
+restic backup /backup ${RESTIC_JOB_ARGS} --tag=${RESTIC_TAG?"Missing environment variable RESTIC_TAG"} >> ${lastLogfile} 2>&1
 rc=$?
 logLast "Finished backup at $(date)"
 if [[ $rc == 0 ]]; then
-    echo "Backup Successfull" 
+    echo "Backup Successfull"
 else
     echo "Backup Failed with Status ${rc}"
     restic unlock
